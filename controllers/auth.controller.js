@@ -75,14 +75,14 @@ const signupController = async (request, response) => {
     return response.status(201).json({ status: "success", data: newanimal });
   } catch (error) {
     const { errors, name, parent } = error;
-    const {code}= parent;
+    
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
         .json({ status: "failed", message: errors[0].message });
-    }else if(name === "SequelizeDatabaseError" && code === "22003"){
+    }else if(name === "SequelizeDatabaseError" && parent?.code === "22003"){
         return response.status(400).json({status: "failed", message: "Invalid phone number"})
-    }else if(name === "SequelizeDatabaseError" && code !== "22003"){
+    }else if(name === "SequelizeDatabaseError" && parent?.code !== "22003"){
         return response.status(400).json({status: "failed", message: "Invalid credentials"})
     }
     else {
