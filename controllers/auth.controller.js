@@ -134,7 +134,7 @@ const LoginController = async(request, response, next) => {
     return response.status(200).json({
       message: "User logged in successfully",
       status: "success",
-      user: result.userRole,
+      role: result.userRole,
       token,
     });
 
