@@ -21,10 +21,10 @@ const animalLogin = async (email) => {
     const result = await animals.findOne({ where: { email } });
     return result;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
+
 
 module.exports = {
   animalLogin, animalSignup

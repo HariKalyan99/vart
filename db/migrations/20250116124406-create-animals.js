@@ -13,7 +13,6 @@ module.exports = {
       },
       animalRole: {
         type: Sequelize.ENUM("zookeeper", "kingofjungle", "queenofjungle"),
-        unique: true,
         allowNull: true,
       },
       animalname: {
@@ -43,9 +42,13 @@ module.exports = {
         },
       },
       phoneNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         unique: true,
         allowNull: false,
+        validate: {
+          is: /^[0-9]+$/i, 
+          len: [10],
+        },
       },
       password: {
         type: Sequelize.STRING,

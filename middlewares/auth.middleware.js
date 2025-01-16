@@ -1,6 +1,6 @@
-const { config } = require("dotenv");
 const jwt = require("jsonwebtoken");
 const animals = require("../db/models/animals");
+const config = require("../config");
 
 
 const authentication = async (request, response, next) => {

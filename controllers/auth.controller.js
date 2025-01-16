@@ -74,14 +74,18 @@ const signupController = async (request, response) => {
 
     return response.status(201).json({ status: "success", data: newanimal });
   } catch (error) {
-    const { errors, name } = error;
+    const { errors, name, parent } = error;
+    const {code}= parent;
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
         .json({ status: "failed", message: errors[0].message });
-    }else if(name === "SequelizeDatabaseError"){
-        return response.status(400).json({status: "failed", message: "Invalid role"})
-    } else {
+    }else if(name === "SequelizeDatabaseError" && code === "22003"){
+        return response.status(400).json({status: "failed", message: "Invalid phone number"})
+    }else if(name === "SequelizeDatabaseError" && code !== "22003"){
+        return response.status(400).json({status: "failed", message: "Invalid credentials"})
+    }
+    else {
       return response
         .status(500)
         .json({ status: "error", message: "Internal server error" });
@@ -138,19 +142,12 @@ const loginController = async(request, response) => {
     });
 
   } catch (error) {
-    console.log(error);
       return response
         .status(500)
         .json({ status: "error", message: "Internal server error" });
   }
 };
 
-const animalListController = async(request, response) => {
-    try {
-        
-    } catch (error) {
-        
-    }
-}
 
-module.exports = { signupController, loginController };
+
+module.exports = { signupController, loginController};

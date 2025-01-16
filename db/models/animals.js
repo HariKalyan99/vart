@@ -12,7 +12,6 @@ module.exports =  sequelize.define('animals', {
       },
       animalRole: {
         type: DataTypes.ENUM("zookeeper", "kingofjungle", "queenofjungle"),
-        unique: true,
         allowNull: true,
       },
       animalname: {
@@ -42,9 +41,13 @@ module.exports =  sequelize.define('animals', {
         },
       },
       phoneNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+        validate: {
+          is: /^[0-9]+$/i, 
+          len: [10],
+        },
       },
       password: {
         type: DataTypes.STRING,
