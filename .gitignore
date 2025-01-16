@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# macOS Finder
+.DS_Store
+
+# npm debug logs
+npm-debug.log
+
+# JetBrains IDE
+.idea/
+
+# VS Code settings
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+Thumbs.db

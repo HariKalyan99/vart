@@ -1,0 +1,19 @@
+SERVER_PORT=xxxxx
+NODE_ENV=xxxxx
+
+# DB Credtentials
+DB_USERNAME=xxxxx
+DB_PASSWORD=xxxxx
+DB_DATABASE=xxxxx
+DB_HOST=xxxxx
+DB_PORT=xxxxx
+DB_DIALECT=xxxxx
+
+
+#jwt 
+JWT_SECRET=asdkjaskldlasldjdasdlajlsd
+JWT_EXPIRES_IN=1d
+
+# admin info
+ADMIN_EMAIL='xxxx@xxxx.com'
+ADMIN_PASSWORD='xxxxxxxx'
