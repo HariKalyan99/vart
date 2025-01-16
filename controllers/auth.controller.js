@@ -1,8 +1,7 @@
-const user = require("../db/models/user");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const config = require("../config");
-const { userSignup, userLogin } = require("../services/auth.services");
+const { animalSignup, animalLogin } = require("../services/auth.services");
 const jwt = require('jsonwebtoken');
 
 const generateToken = (payload) => {
@@ -11,22 +10,22 @@ const generateToken = (payload) => {
   });
 };
 
-const signupController = async (request, response, next) => {
-  const { username, userRole, email, phoneNumber, password, confirmPassword } =
+const signupController = async (request, response) => {
+  const { animalname, animalRole, email, phoneNumber, password, confirmPassword } =
     request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   try {
-    if (["admin"].includes(userRole)) {
+    if (["zookeeper"].includes(animalRole)) {
       return response
         .status(400)
-        .json({ status: "failed", message: "Invalid user role" });
+        .json({ status: "failed", message: "Invalid role" });
     }
 
-    if (!username || !email || !password) {
+    if (!animalname || !email || !password) {
       return response.status(400).json({
         status: "failed",
-        message: "Mandatory fields: email, password, username",
+        message: "Mandatory fields: email, password, animalname",
       });
     }
 
@@ -60,20 +59,20 @@ const signupController = async (request, response, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await userSignup({
-      username,
-      userRole,
+    const newanimal = await animalSignup({
+      animalname,
+      animalRole,
       email,
       phoneNumber,
       password: hashedPassword,
     });
-    if (!newUser) {
+    if (!newanimal) {
       return response
         .status(400)
-        .json({ status: "failed", message: "Error creating the user" });
+        .json({ status: "failed", message: "Error creating the animal" });
     }
 
-    return response.status(201).json({ status: "success", data: newUser });
+    return response.status(201).json({ status: "success", data: newanimal });
   } catch (error) {
     const { errors, name } = error;
     if (name === "SequelizeUniqueConstraintError") {
@@ -81,7 +80,7 @@ const signupController = async (request, response, next) => {
         .status(400)
         .json({ status: "failed", message: errors[0].message });
     }else if(name === "SequelizeDatabaseError"){
-        return response.status(400).json({status: "failed", message: "Invalid user role"})
+        return response.status(400).json({status: "failed", message: "Invalid role"})
     } else {
       return response
         .status(500)
@@ -90,7 +89,7 @@ const signupController = async (request, response, next) => {
   }
 };
 
-const LoginController = async(request, response, next) => {
+const loginController = async(request, response) => {
     const { email, password } =
     request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -116,7 +115,7 @@ const LoginController = async(request, response, next) => {
         .json({ status: "failed", message: "Email is invalid" });
     }
 
-    const result = await userLogin(email);
+    const result = await animalLogin(email);
 
     if (!result) {
       return response.status(401).json({ message: "Invalid credentials" });
@@ -132,9 +131,9 @@ const LoginController = async(request, response, next) => {
     const token = generateToken({ id: result.id });
 
     return response.status(200).json({
-      message: "User logged in successfully",
+      message: "logged in successfully",
       status: "success",
-      role: result.userRole,
+      role: result.animalRole,
       token,
     });
 
@@ -146,4 +145,12 @@ const LoginController = async(request, response, next) => {
   }
 };
 
-module.exports = { signupController, LoginController };
+const animalListController = async(request, response) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+module.exports = { signupController, loginController };

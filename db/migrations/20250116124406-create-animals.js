@@ -1,37 +1,36 @@
 "use strict";
 
-const { DataTypes } = require('sequelize');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("animals", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
-      userRole: {
-        type: DataTypes.ENUM("principal", "teacher", "student"),
+      animalRole: {
+        type: Sequelize.ENUM("zookeeper", "kingofjungle", "queenofjungle"),
         unique: true,
         allowNull: true,
       },
-      username: {
-        type: DataTypes.STRING,
+      animalname: {
+        type: Sequelize.STRING,
         unique: true,
         allowNull: false,
         validate: {
           notNull: {
-            msg: "username cannot be null",
+            msg: "animalname cannot be null",
           },
           notEmpty: {
-            msg: "username cannot be empty",
+            msg: "animalname cannot be empty",
           },
         },
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         unique: true,
         allowNull: false,
         validate: {
@@ -44,12 +43,12 @@ module.exports = {
         },
       },
       phoneNumber: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         unique: true,
         allowNull: false,
       },
       password: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
           notNull: {
@@ -60,20 +59,45 @@ module.exports = {
           },
         },
       },
+      address: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        validate: {
+          len: [0, 200],
+        },
+      },
+      dob: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      contributions: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        validate: {
+          len: [0, 100],
+        },
+      },
+      category: {
+        type: Sequelize.ENUM("herbivores", "carnivores", "omnivores", "amphibian", "reptiles"),
+        allowNull: true,
+      },
+      requestForRole: {
+        type: Sequelize.ENUM("zookeeper", "kingofjungle", "queenofjungle")
+      },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       },
       deletedAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("animals");
   },
 };

@@ -1,13 +1,13 @@
-const user = require("../db/models/user");
+const animals = require("../db/models/animals");
 
 
-const userSignup = async (body) => {
+const animalSignup = async (body) => {
   try {
-    const newUser = await user.create({
+    const newAnimal = await animals.create({
       ...body,
     });
-    const result = await user.findOne({
-      where: { id: newUser.id }, 
+    const result = await animals.findOne({
+      where: { id: newAnimal.id }, 
       attributes: { exclude: ['password', 'deletedAt'] },
     });
     return result;
@@ -16,9 +16,9 @@ const userSignup = async (body) => {
   }
 };
 
-const userLogin = async (email) => {
+const animalLogin = async (email) => {
   try {
-    const result = await user.findOne({ where: { email } });
+    const result = await animals.findOne({ where: { email } });
     return result;
   } catch (error) {
     console.log(error);
@@ -27,5 +27,5 @@ const userLogin = async (email) => {
 };
 
 module.exports = {
-  userLogin, userSignup
+  animalLogin, animalSignup
 };
