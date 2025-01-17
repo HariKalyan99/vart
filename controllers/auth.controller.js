@@ -1,8 +1,12 @@
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const config = require("../config");
-const { animalSignup, animalLogin } = require("../services/auth.services");
-const jwt = require('jsonwebtoken');
+const {
+  animalSignup,
+  animalLogin,
+  animalLogout,
+} = require("../services/auth.services");
+const jwt = require("jsonwebtoken");
 
 const generateToken = (payload) => {
   return jwt.sign(payload, config.jwtsecret, {
@@ -11,8 +15,14 @@ const generateToken = (payload) => {
 };
 
 const signupController = async (request, response) => {
-  const { animalname, animalRole, email, phoneNumber, password, confirmPassword } =
-    request.body;
+  const {
+    animalname,
+    animalRole,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+  } = request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   try {
@@ -75,17 +85,20 @@ const signupController = async (request, response) => {
     return response.status(201).json({ status: "success", data: newanimal });
   } catch (error) {
     const { errors, name, parent } = error;
-    
+
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
         .json({ status: "failed", message: errors[0].message });
-    }else if(name === "SequelizeDatabaseError" && parent?.code === "22003"){
-        return response.status(400).json({status: "failed", message: "Invalid phone number"})
-    }else if(name === "SequelizeDatabaseError" && parent?.code !== "22003"){
-        return response.status(400).json({status: "failed", message: "Invalid credentials"})
-    }
-    else {
+    } else if (name === "SequelizeDatabaseError" && parent?.code === "22003") {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Invalid phone number" });
+    } else if (name === "SequelizeDatabaseError" && parent?.code !== "22003") {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Invalid credentials" });
+    } else {
       return response
         .status(500)
         .json({ status: "error", message: "Internal server error" });
@@ -93,9 +106,8 @@ const signupController = async (request, response) => {
   }
 };
 
-const loginController = async(request, response) => {
-    const { email, password } =
-    request.body;
+const loginController = async (request, response) => {
+  const { email, password } = request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   try {
@@ -128,26 +140,51 @@ const loginController = async(request, response) => {
     const isPasswordVerified = await bcrypt.compare(password, result.password);
 
     if (!isPasswordVerified) {
-      logger.error("Invalid credentials");
       return response.status(401).json({ message: "Invalid credentials" });
     }
-
     const token = generateToken({ id: result.id });
+
+    response.cookie("jwt", token, {
+      httpOnly: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 1000,
+      path: "/",
+      sameSite: "Lax", //for csrf attacks
+    });
 
     return response.status(200).json({
       message: "logged in successfully",
       status: "success",
       role: result.animalRole,
-      token,
     });
-
   } catch (error) {
-      return response
-        .status(500)
-        .json({ status: "error", message: "Internal server error" });
+    console.log(error)
+    return response
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
   }
 };
 
+const logoutController = async (request, response) => {
+  try {
+    const result = await animalLogout(response);
 
+    if (result) {
+      return response.status(200).json({
+        message: "Logout successfull",
+        status: "success",
+      });
+    } else {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Unable to logout" });
+    }
+  } catch (error) {
+    console.log(error);
+    return response
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
+  }
+};
 
-module.exports = { signupController, loginController};
+module.exports = { signupController, loginController, logoutController };
