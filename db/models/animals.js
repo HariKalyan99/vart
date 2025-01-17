@@ -86,6 +86,15 @@ module.exports =  sequelize.define('animals', {
       requestForRole: {
         type: DataTypes.ENUM("zookeeper", "kingofjungle", "queenofjungle")
       },
+      resetPasswordToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      resetPasswordExpires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

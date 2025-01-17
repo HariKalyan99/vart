@@ -13,7 +13,8 @@ const {
   JWT_SECRET,
   JWT_EXPIRES_IN,
   ZOOKEEPER_EMAIL,
-  ZOOKEEPER_PASSWORD
+  ZOOKEEPER_PASSWORD,APP_EMAIL,
+  APP_PWD
 } = process.env;
 
 const isProduction = NODE_ENV === 'production';
@@ -40,6 +41,8 @@ const config = {
   jwtexpiresin: JWT_EXPIRES_IN,
   zookeeperemail: ZOOKEEPER_EMAIL,
   zookeeperpassword: ZOOKEEPER_PASSWORD,
+  appemail: APP_EMAIL,
+  apppwd: APP_PWD,
 };
 
 module.exports = config;

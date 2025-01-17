@@ -31,7 +31,7 @@ const animalDeleteController = async (request, response) => {
     if (animalRole === "kingofjungle" || animalRole === "queenofjungle") {
       return response.status(400).json({
         status: "failed",
-        message: "You are not allowed to access this feature!",
+        message: "You don't have permission to perform this action",
       });
     }
 
@@ -73,7 +73,7 @@ const animalPostController = async (request, response) => {
     if (ar !== "zookeeper") {
       return response.status(400).json({
         status: "failed",
-        message: "You are not allowed to use this feature",
+        message: "You don't have permission to perform this action",
       });
     }
 
@@ -244,7 +244,7 @@ const animalEditController = async (request, response) => {
       if (ar === "kingofjungle") {
         return response.status(400).json({
           status: "failed",
-          message: "You are not allowed to use this feature",
+          message: "You don't have permission to perform this action",
         });
       }
   

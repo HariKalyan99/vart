@@ -1,12 +1,18 @@
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const config = require("../config");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const { Op } = require("sequelize");
+
 const {
   animalSignup,
   animalLogin,
   animalLogout,
 } = require("../services/auth.services");
 const jwt = require("jsonwebtoken");
+const { editAnimal } = require("../services/animal.services");
+const animals = require("../db/models/animals");
 
 const generateToken = (payload) => {
   return jwt.sign(payload, config.jwtsecret, {
@@ -145,8 +151,8 @@ const loginController = async (request, response) => {
     const token = generateToken({ id: result.id });
 
     response.cookie("jwt", token, {
-      httpOnly: process.env.NODE_ENV === "production",
-      secure: process.env.NODE_ENV === "production",
+      httpOnly: config.NODE_ENV === "production",
+      secure: config.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 1000,
       path: "/",
       sameSite: "Lax", //for csrf attacks
@@ -158,7 +164,7 @@ const loginController = async (request, response) => {
       role: result.animalRole,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return response
       .status(500)
       .json({ status: "error", message: "Internal server error" });
@@ -187,4 +193,117 @@ const logoutController = async (request, response) => {
   }
 };
 
-module.exports = { signupController, loginController, logoutController };
+const generateResetToken = () => {
+  return crypto.randomBytes(20).toString("hex");
+};
+
+const forgotPasswordController = async (request, response) => {
+  const { email } = request.body;
+
+  try {
+    const animal = await animals.findOne({
+      where: { email },
+    });
+
+    if (!animal) {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Email not found" });
+    }
+
+    const resetToken = generateResetToken();
+    const resetTokenExpiry = new Date(Date.now() + 3600000);
+
+    await editAnimal(animal.id, {
+      resetPasswordToken: resetToken,
+      resetPasswordExpires: resetTokenExpiry,
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: config.appemail,
+        pass: config.apppwd,
+      },
+    });
+
+    const mailOptions = {
+      from: config.appemail,
+      to: email,
+      subject: "Password Reset Request",
+      text: `You requested a password reset. Please copy the access password below to reset your password: access_password=${resetToken}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return response.status(200).json({
+      status: "success",
+      message: "Password reset link has been sent to your email",
+    });
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
+  }
+};
+
+const resetPasswordController = async (request, response) => {
+  const { token, newPassword, confirmPassword } = request.body;
+
+  try {
+    if (!newPassword || newPassword.length < 7) {
+      return response
+        .status(400)
+        .json({
+          status: "failed",
+          message: "Password must be at least 7 characters long",
+        });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Passwords do not match" });
+    }
+
+    const animal = await animals.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpires: { [Op.gt]: new Date() },
+      },
+    });
+
+    if (!animal) {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "Invalid or expired token" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await animal.update({
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+
+    return response.status(200).json({
+      status: "success",
+      message: "Your password has been reset successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  signupController,
+  loginController,
+  logoutController,
+  forgotPasswordController,
+  resetPasswordController,
+};

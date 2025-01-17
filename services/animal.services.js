@@ -39,7 +39,6 @@ const editAnimal = async (animalId, updatedFields) => {
     }
 
     const result = await animal.update(updatedFields);
-
     return result;
   } catch (error) {
     throw error;

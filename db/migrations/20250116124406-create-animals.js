@@ -87,6 +87,15 @@ module.exports = {
       requestForRole: {
         type: Sequelize.ENUM("zookeeper", "kingofjungle", "queenofjungle")
       },
+      resetPasswordToken: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      resetPasswordExpires: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
