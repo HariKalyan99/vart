@@ -91,7 +91,6 @@ const signupController = async (request, response) => {
     return response.status(201).json({ status: "success", data: newanimal });
   } catch (error) {
     const { errors, name, parent } = error;
-
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
@@ -148,8 +147,16 @@ const loginController = async (request, response) => {
     if (!isPasswordVerified) {
       return response.status(401).json({ message: "Invalid credentials" });
     }
-    const token = generateToken({ id: result.id });
 
+    if(result.isLoggedIn){
+      return response.status(200).json({status: "warning", message: "Your account is logged in already"});
+    }
+    await editAnimal(result.id, {
+      isLoggedIn: true,
+    });
+
+    const token = generateToken({ id: result.id });
+    
     response.cookie("jwt", token, {
       httpOnly: config.NODE_ENV === "production",
       secure: config.NODE_ENV === "production",
@@ -173,8 +180,16 @@ const loginController = async (request, response) => {
 
 const logoutController = async (request, response) => {
   try {
+    const {isLoggedIn, id} = request.animal
     const result = await animalLogout(response);
-
+    if(!isLoggedIn){
+      return response.status(400).json({status: "failed", message: "You are not logged in!"})
+    }
+    
+    await editAnimal(id, {
+      isLoggedIn: false,
+    });
+    
     if (result) {
       return response.status(200).json({
         message: "Logout successfull",

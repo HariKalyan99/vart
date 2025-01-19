@@ -96,6 +96,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      isLoggedIn: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true
+      },
+      requestPermission: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
