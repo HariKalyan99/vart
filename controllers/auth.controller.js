@@ -233,6 +233,15 @@ const forgotPasswordController = async (request, response) => {
         .json({ status: "failed", message: "Email not found" });
     }
 
+    
+    if(animal?.dataValues.isLoggedIn){
+      console.log(animal.dataValues)
+      await editAnimal(animal.dataValues.id, {
+        isLoggedIn: false,
+      });
+      await animalLogout(response);
+    }
+
     const resetToken = generateResetToken();
     const resetTokenExpiry = new Date(Date.now() + 3600000);
 
@@ -307,6 +316,23 @@ const resetPasswordController = async (request, response) => {
       resetPasswordToken: null,
       resetPasswordExpires: null,
     });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: config.appemail,
+        pass: config.apppwd,
+      },
+    });
+
+    const mailOptions = {
+      from: config.appemail,
+      to: email,
+      subject: "Password Reset",
+      text: `Password has been reset!`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return response.status(200).json({
       status: "success",
