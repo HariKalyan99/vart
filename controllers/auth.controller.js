@@ -148,15 +148,20 @@ const loginController = async (request, response) => {
       return response.status(401).json({ message: "Invalid credentials" });
     }
 
-    if(result.isLoggedIn){
-      return response.status(200).json({status: "warning", message: "Your account is logged in already"});
+    if (result.isLoggedIn) {
+      return response
+        .status(200)
+        .json({
+          status: "warning",
+          message: "Your account is logged in already",
+        });
     }
     await editAnimal(result.id, {
       isLoggedIn: true,
     });
 
     const token = generateToken({ id: result.id });
-    
+
     response.cookie("jwt", token, {
       httpOnly: config.NODE_ENV === "production",
       secure: config.NODE_ENV === "production",
@@ -180,16 +185,18 @@ const loginController = async (request, response) => {
 
 const logoutController = async (request, response) => {
   try {
-    const {isLoggedIn, id} = request.animal
+    const { isLoggedIn, id } = request.animal;
     const result = await animalLogout(response);
-    if(!isLoggedIn){
-      return response.status(400).json({status: "failed", message: "You are not logged in!"})
+    if (!isLoggedIn) {
+      return response
+        .status(400)
+        .json({ status: "failed", message: "You are not logged in!" });
     }
-    
+
     await editAnimal(id, {
       isLoggedIn: false,
     });
-    
+
     if (result) {
       return response.status(200).json({
         message: "Logout successfull",
@@ -265,15 +272,13 @@ const forgotPasswordController = async (request, response) => {
 
 const resetPasswordController = async (request, response) => {
   const { token, newPassword, confirmPassword } = request.body;
-
+ 
   try {
     if (!newPassword || newPassword.length < 7) {
-      return response
-        .status(400)
-        .json({
-          status: "failed",
-          message: "Password must be at least 7 characters long",
-        });
+      return response.status(400).json({
+        status: "failed",
+        message: "Password must be at least 7 characters long",
+      });
     }
 
     if (newPassword !== confirmPassword) {
@@ -321,4 +326,5 @@ module.exports = {
   logoutController,
   forgotPasswordController,
   resetPasswordController,
+  generateResetToken
 };
