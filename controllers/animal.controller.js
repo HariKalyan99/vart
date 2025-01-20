@@ -194,12 +194,11 @@ const animalPostController = async (request, response) => {
     await transporter.sendMail(mailOptions);
     return response.status(200).json({
       status: "success",
-      message: `Password has been sent to ${animalname} email`,
+      message: `Password has been sent to ${animalname}'s email`,
       data: newanimal
     });
   } catch (error) {
     const { errors, name, parent } = error;
-    console.log(error)
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
