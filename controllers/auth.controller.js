@@ -178,7 +178,6 @@ const loginController = async (request, response) => {
       role: result.animalRole,
     });
   } catch (error) {
-    console.log(error);
     return response
       .status(500)
       .json({ status: "error", message: "Internal server error" });
@@ -210,7 +209,6 @@ const logoutController = async (request, response) => {
         .json({ status: "failed", message: "Unable to logout" });
     }
   } catch (error) {
-    console.log(error);
     return response
       .status(500)
       .json({ status: "error", message: "Internal server error" });
@@ -237,7 +235,6 @@ const forgotPasswordController = async (request, response) => {
 
     
     if(animal?.dataValues.isLoggedIn){
-      console.log(animal.dataValues)
       await editAnimal(animal.dataValues.id, {
         isLoggedIn: false,
       });
