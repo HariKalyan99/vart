@@ -8,13 +8,14 @@ const {
   DB_HOST,
   DB_PORT,
   DB_DIALECT,
-  APP_PORT,
   NODE_ENV,
   JWT_SECRET,
   JWT_EXPIRES_IN,
   ZOOKEEPER_EMAIL,
   ZOOKEEPER_PASSWORD,APP_EMAIL,
-  APP_PWD
+  APP_PWD,
+  APP_HEADER,
+  SERVER_PORT
 } = process.env;
 
 const isProduction = NODE_ENV === 'production';
@@ -35,7 +36,7 @@ const config = {
         },
       }
     : {},
-  appport: APP_PORT,
+  appport: SERVER_PORT,
   nodeenvironment: NODE_ENV,
   jwtsecret: JWT_SECRET,
   jwtexpiresin: JWT_EXPIRES_IN,
@@ -43,6 +44,7 @@ const config = {
   zookeeperpassword: ZOOKEEPER_PASSWORD,
   appemail: APP_EMAIL,
   apppwd: APP_PWD,
+  appheader: APP_HEADER
 };
 
 module.exports = config;
