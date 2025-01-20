@@ -88,7 +88,7 @@ const signupController = async (request, response) => {
         .json({ status: "failed", message: "Error creating the animal" });
     }
 
-    return response.status(201).json({ status: "success", data: newanimal });
+    return response.status(201).json({ status: "success", data: newanimal, message: "Registered successfully" });
   } catch (error) {
     const { errors, name, parent } = error;
     if (name === "SequelizeUniqueConstraintError") {
@@ -169,6 +169,8 @@ const loginController = async (request, response) => {
       path: "/",
       sameSite: "Lax", //for csrf attacks
     });
+
+    
 
     return response.status(200).json({
       message: "logged in successfully",
@@ -327,7 +329,7 @@ const resetPasswordController = async (request, response) => {
 
     const mailOptions = {
       from: config.appemail,
-      to: email,
+      to: animal.email,
       subject: "Password Reset",
       text: `Password has been reset!`,
     };

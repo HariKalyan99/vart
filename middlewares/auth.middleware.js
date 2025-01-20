@@ -16,8 +16,8 @@ const authentication = async (request, response, next) => {
 
   try {
     const decodedToken = jwt.verify(token, config.jwtsecret);
+    console.log(decodedToken)
     const animalId = decodedToken.id;
-
     const animalExist = await animals.findByPk(animalId);
     if (!animalExist) {
       return response.status(404).json({ error: "Animal no longer exists" });
