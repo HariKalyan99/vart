@@ -31,7 +31,6 @@ const signupController = async (request, response) => {
     confirmPassword,
   } = request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   try {
     if (["zookeeper"].includes(animalRole)) {
       return response
