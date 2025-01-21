@@ -6,10 +6,10 @@ const {
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const { animalSignup } = require("../services/auth.services");
-const animalExists = require("../services/utils/common");
 const nodemailer = require("nodemailer");
 const { generateResetToken } = require("./auth.controller");
 const config = require("../config");
+const { animalExists, animalFind } = require("../services/utils/common");
 
 const animalListController = async (request, response) => {
   try {
@@ -21,6 +21,26 @@ const animalListController = async (request, response) => {
       status: true,
       data: result,
       totalAnimalData: result.length,
+    });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
+  }
+};
+
+const getAnimalController = async (request, response) => {
+  try {
+    const {id} = request.params;
+    
+    const result = await animalFind('id', id);
+    if(!result){
+      return response.status(400).json({status: 'failed', message: "Coudn't find an animal"})
+    }
+    return response.status(200).json({
+      status: true,
+      data: result,
+      message: "Found"
     });
   } catch (error) {
     return response
@@ -426,4 +446,5 @@ module.exports = {
   animalDeleteController,
   animalPostController,
   animalEditController,
+  getAnimalController
 };

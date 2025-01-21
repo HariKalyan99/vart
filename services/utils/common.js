@@ -3,16 +3,16 @@ const animals = require("../../db/models/animals");
 
 const animalExists = async (field, value, excludeId) => {
   let result;
-    try {
+  try {
     if (excludeId) {
-        result = await animals.findOne({
+      result = await animals.findOne({
         where: {
           [field]: value,
           id: { [Op.ne]: excludeId },
         },
       });
     } else {
-        result = await animals.findOne({
+      result = await animals.findOne({
         where: {
           [field]: value,
         },
@@ -24,4 +24,17 @@ const animalExists = async (field, value, excludeId) => {
     throw error;
   }
 };
-module.exports = animalExists;
+
+const animalFind = async (field, value) => {
+  try {
+   let result = await animals.findOne({
+      where: {
+        [field]: value,
+      },
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+module.exports = {animalExists, animalFind};

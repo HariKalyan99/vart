@@ -12,6 +12,7 @@ const {
 } = require("../services/auth.services");
 const jwt = require("jsonwebtoken");
 const { editAnimal } = require("../services/animal.services");
+const { animalFind } = require("../services/utils/common");
 const animals = require("../db/models/animals");
 
 const generateToken = (payload) => {
@@ -176,6 +177,8 @@ const loginController = async (request, response) => {
       message: "logged in successfully",
       status: "success",
       role: result.animalRole,
+      id: result.id,
+      name: result.animalname
     });
   } catch (error) {
     return response
@@ -223,10 +226,7 @@ const forgotPasswordController = async (request, response) => {
   const { email } = request.body;
 
   try {
-    const animal = await animals.findOne({
-      where: { email },
-    });
-
+    const animal = await animalFind("email", email);
     if (!animal) {
       return response
         .status(400)
