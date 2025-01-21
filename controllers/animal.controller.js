@@ -302,8 +302,7 @@ const animalEditController = async (request, response) => {
     if (phoneNumber && phoneNumber !== existingPhoneNumber) {
       const phoneExists = await animalExists(
         "phoneNumber",
-        phoneNumber,
-        existingAnimalId
+        phoneNumber
       );
       if (phoneExists) {
         return response
@@ -336,7 +335,7 @@ const animalEditController = async (request, response) => {
         "herbivores",
         "carnivores",
         "omnivores",
-        "amphibian",
+        "amphibians",
         "reptiles",
       ].includes(category)
     ) {
@@ -397,6 +396,7 @@ const animalEditController = async (request, response) => {
     return response.status(200).json({
       status: "success",
       data: updatedAnimal,
+      message: "Updated successfully"
     });
   } catch (error) {
     const { errors, name, parent } = error;
@@ -412,7 +412,7 @@ const animalEditController = async (request, response) => {
     } else if (name === "SequelizeDatabaseError" && parent?.code !== "22003") {
       return response
         .status(400)
-        .json({ status: "failed", message: "Invalid credentials" });
+        .json({ status: "failed", message: "Invalid inputs" });
     } else {
       return response
         .status(500)
