@@ -309,7 +309,7 @@ const animalEditController = async (request, response) => {
         .status(400)
         .json({ status: "failed", message: "Email is invalid" });
     }
-    if (email !== existingEmail || email === existingEmail) {
+    if (email && email !== existingEmail || email && email === existingEmail) {
       const emailExists = await animalExists("email", email);
       if (emailExists) {
         return response
@@ -419,6 +419,7 @@ const animalEditController = async (request, response) => {
     });
   } catch (error) {
     const { errors, name, parent } = error;
+    console.log(error)
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)
