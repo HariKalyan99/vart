@@ -281,12 +281,12 @@ const animalEditController = async (request, response) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   try {
-    if (ar === "kingofjungle") {
-      return response.status(400).json({
-        status: "failed",
-        message: "You don't have permission to perform this action",
-      });
-    }
+    // if (ar === "kingofjungle") {
+    //   return response.status(400).json({
+    //     status: "failed",
+    //     message: "You don't have permission to perform this action",
+    //   });
+    // }
 
     if (
       !animalname &&

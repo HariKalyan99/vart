@@ -77,7 +77,7 @@ const signupController = async (request, response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newanimal = await animalSignup({
       animalname,
-      animalRole,
+      animalRole: "kingofjungle",
       email,
       phoneNumber,
       password: hashedPassword,
