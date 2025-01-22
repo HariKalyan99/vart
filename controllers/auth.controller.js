@@ -88,7 +88,13 @@ const signupController = async (request, response) => {
         .json({ status: "failed", message: "Error creating the animal" });
     }
 
-    return response.status(201).json({ status: "success", data: newanimal, message: "Registered successfully" });
+    return response
+      .status(201)
+      .json({
+        status: "success",
+        data: newanimal,
+        message: "Registered successfully",
+      });
   } catch (error) {
     const { errors, name, parent } = error;
     if (name === "SequelizeUniqueConstraintError") {
@@ -149,12 +155,10 @@ const loginController = async (request, response) => {
     }
 
     if (result.isLoggedIn) {
-      return response
-        .status(200)
-        .json({
-          status: "warning",
-          message: "Your account is logged in already",
-        });
+      return response.status(200).json({
+        status: "warning",
+        message: "Your account is logged in already",
+      });
     }
     await editAnimal(result.id, {
       isLoggedIn: true,
@@ -170,14 +174,12 @@ const loginController = async (request, response) => {
       sameSite: "Lax", //for csrf attacks
     });
 
-    
-
     return response.status(200).json({
       message: "logged in successfully",
       status: "success",
       role: result.animalRole,
       id: result.id,
-      name: result.animalname
+      name: result.animalname,
     });
   } catch (error) {
     return response
@@ -201,9 +203,15 @@ const logoutController = async (request, response) => {
     });
 
     if (result) {
-      return response.status(200).json({
-        message: "Logout successfull",
-        status: "success",
+      request.session.destroy((err) => {
+        if (err) {
+          return response.status(500).json({ error: "Error logging out" });
+        }
+
+        return response.status(200).json({
+          message: "Logout successfull",
+          status: "success",
+        });
       });
     } else {
       return response
@@ -232,8 +240,7 @@ const forgotPasswordController = async (request, response) => {
         .json({ status: "failed", message: "Email not found" });
     }
 
-    
-    if(animal?.dataValues.isLoggedIn){
+    if (animal?.dataValues.isLoggedIn) {
       await editAnimal(animal.dataValues.id, {
         isLoggedIn: false,
       });
@@ -279,7 +286,7 @@ const forgotPasswordController = async (request, response) => {
 
 const resetPasswordController = async (request, response) => {
   const { token, newPassword, confirmPassword } = request.body;
- 
+
   try {
     if (!newPassword || newPassword.length < 7) {
       return response.status(400).json({
@@ -350,5 +357,5 @@ module.exports = {
   logoutController,
   forgotPasswordController,
   resetPasswordController,
-  generateResetToken
+  generateResetToken,
 };

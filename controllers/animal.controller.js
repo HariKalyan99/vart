@@ -254,6 +254,7 @@ const animalEditController = async (request, response) => {
     requestForRole,
   } = request.body;
 
+
   const { animalId } = request.params;
 
   let animal;
@@ -279,7 +280,6 @@ const animalEditController = async (request, response) => {
   } = dataValues;
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   try {
     if (ar === "kingofjungle") {
       return response.status(400).json({
@@ -309,8 +309,7 @@ const animalEditController = async (request, response) => {
         .status(400)
         .json({ status: "failed", message: "Email is invalid" });
     }
-
-    if (email && email !== existingEmail) {
+    if (email !== existingEmail || email === existingEmail) {
       const emailExists = await animalExists("email", email);
       if (emailExists) {
         return response
@@ -355,7 +354,7 @@ const animalEditController = async (request, response) => {
         "herbivores",
         "carnivores",
         "omnivores",
-        "amphibians",
+        "amphibian",
         "reptiles",
       ].includes(category)
     ) {
@@ -420,7 +419,6 @@ const animalEditController = async (request, response) => {
     });
   } catch (error) {
     const { errors, name, parent } = error;
-    console.log(error);
     if (name === "SequelizeUniqueConstraintError") {
       return response
         .status(400)

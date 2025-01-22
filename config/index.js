@@ -15,7 +15,8 @@ const {
   ZOOKEEPER_PASSWORD,APP_EMAIL,
   APP_PWD,
   APP_HEADER,
-  SERVER_PORT
+  SERVER_PORT,
+  SESSION_SECRET
 } = process.env;
 
 const isProduction = NODE_ENV === 'production';
@@ -44,7 +45,8 @@ const config = {
   zookeeperpassword: ZOOKEEPER_PASSWORD,
   appemail: APP_EMAIL,
   apppwd: APP_PWD,
-  appheader: APP_HEADER
+  appheader: APP_HEADER,
+  sessionsecret: SESSION_SECRET
 };
 
 module.exports = config;

@@ -8,12 +8,19 @@ const animalRouter = require("./routes/animal.route");
 const appMiddleware = require("./middlewares/app.middleware");
 const morgan = require("morgan");
 const logger = require("./services/utils/logger");
-
+const session = require('express-session');
 const morganFormat = ":method :url :status :response-time ms";
 
 const app = express();
 const PORT = config.appport || 4040;
 
+
+app.use(session({
+  secret: config.sessionsecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } 
+}));
 app.use(express.json());
 app.use(
   cors({
