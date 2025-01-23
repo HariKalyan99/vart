@@ -4,6 +4,7 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const config = require("../../config");
+const crypto = require('crypto');
 
 generateResetToken = () => {
   return crypto.randomBytes(20).toString("hex");
@@ -147,6 +148,7 @@ module.exports = animalCreateController = async (request, response) => {
       data: newanimal,
     });
   } catch (error) {
+    
     const { errors, name, parent } = error;
     if (name === "SequelizeUniqueConstraintError") {
       return response

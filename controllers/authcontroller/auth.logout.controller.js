@@ -1,6 +1,7 @@
 const AuthServices = require("../../services/auth.services");
 const { animalLogout } = new AuthServices();
-const { editAnimal } = require("../../services/animal.services");
+const AnimalServices = require('../../services/animal.services');
+const {editAnimal} = new AnimalServices();
 
 module.exports = logoutController = async (request, response) => {
   try {

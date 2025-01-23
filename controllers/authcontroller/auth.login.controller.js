@@ -1,6 +1,8 @@
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const config = require("../../config");
+const AnimalServices = require("../../services/animal.services");
+const {editAnimal} = new AnimalServices();
 const AuthServices = require("../../services/auth.services");
 const { animalLogin } = new AuthServices();
 const jwt = require("jsonwebtoken");
@@ -77,6 +79,7 @@ module.exports = loginController = async (request, response) => {
       name: result.animalname,
     });
   } catch (error) {
+    
     return response
       .status(500)
       .json({ status: "error", message: "Internal server error" });

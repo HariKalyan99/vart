@@ -3,7 +3,8 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const AuthServices = require("../../services/auth.services");
 const { animalLogout } = new AuthServices();
-const { editAnimal } = require("../../services/animal.services");
+const AnimalServices = require("../../services/animal.services");
+const { editAnimal } = new AnimalServices();
 const { animalFind } = require("../../services/utils/common");
 
 const generateResetToken = () => {

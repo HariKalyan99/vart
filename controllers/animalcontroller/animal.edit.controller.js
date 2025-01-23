@@ -2,8 +2,7 @@ const AnimalServices = require("../../services/animal.services");
 const { editAnimal } = new AnimalServices();
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
-const config = require("../../config");
+const { animalExists } = require("../../services/utils/common");
 
 
 
@@ -181,6 +180,8 @@ module.exports = animalEditController = async (request, response) => {
         message: "Updated successfully",
       });
     } catch (error) {
+    
+
       const { errors, name, parent } = error;
       if (name === "SequelizeUniqueConstraintError") {
         return response

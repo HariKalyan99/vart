@@ -16,6 +16,7 @@ module.exports = getAnimalController = async (request, response) => {
       message: "Found",
     });
   } catch (error) {
+    
     return response
       .status(500)
       .json({ status: "error", message: "Internal server error" });
