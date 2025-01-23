@@ -1,12 +1,10 @@
 const express = require("express");
 const authentication = require("../middlewares/auth.middleware");
-const {
-  animalListController,
-  animalDeleteController,
-  animalPostController,
-  animalEditController,
-  getAnimalController,
-} = require("../controllers/animal.controller");
+const animalListController = require("../controllers/animalcontroller/animal.list.controller");
+const getAnimalController = require("../controllers/animalcontroller/animal.byId.controller");
+const animalPostController = require("../controllers/animalcontroller/animal.create.controller");
+const animalDeleteController = require("../controllers/animalcontroller/animal.remove.controller");
+const animalEditController = require("../controllers/animalcontroller/animal.edit.controller");
 
 const router = express.Router();
 
