@@ -15,6 +15,22 @@ class AuthServices {
       throw error;
     }
   };
+  animalBulkCreate = async(animalsData) => {
+    try {
+      const newAnimals = await animals.bulkCreate(animalsData, {
+          returning: true,
+      });
+      const result = await animals.findAll({
+          where: {
+              id: newAnimals.map(animal => animal.id),
+          },
+          attributes: { exclude: ["password", "deletedAt"] },
+      });
+      return result;
+  } catch (error) {
+      throw error;
+  }
+  }
   
   animalLogin = async (email) => {
     try {

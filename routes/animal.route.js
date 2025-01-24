@@ -5,8 +5,12 @@ const getAnimalController = require("../controllers/animalcontroller/animal.byId
 const animalPostController = require("../controllers/animalcontroller/animal.create.controller");
 const animalDeleteController = require("../controllers/animalcontroller/animal.remove.controller");
 const animalEditController = require("../controllers/animalcontroller/animal.edit.controller");
+const animalCreatemanyController = require("../controllers/animalcontroller/animal.createmany.controller");
 
 const router = express.Router();
+
+
+router.post("/manyanimals", authentication, animalCreatemanyController);
 
 /**
  * @swagger
