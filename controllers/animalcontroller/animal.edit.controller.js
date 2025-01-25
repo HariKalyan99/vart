@@ -75,26 +75,6 @@ module.exports = animalEditController = async (request, response) => {
           .status(400)
           .json({ status: "failed", message: "Email is invalid" });
       }
-      if (
-        (email && email !== existingEmail) ||
-        (email && email === existingEmail)
-      ) {
-        const emailExists = await animalExists("email", email);
-        if (emailExists) {
-          return response
-            .status(400)
-            .json({ status: "failed", message: "Email is already taken" });
-        }
-      }
-  
-      if (phoneNumber && phoneNumber !== existingPhoneNumber) {
-        const phoneExists = await animalExists("phoneNumber", phoneNumber);
-        if (phoneExists) {
-          return response
-            .status(400)
-            .json({ status: "failed", message: "Phone number is already taken" });
-        }
-      }
   
       if (password && confirmPassword && password !== confirmPassword) {
         return response.status(400).json({
