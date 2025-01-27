@@ -90,7 +90,7 @@ app.use(
     },
   })
 );
-// app.use(appMiddleware);
+app.use(appMiddleware);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/animals", animalRouter);
 
