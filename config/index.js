@@ -17,7 +17,6 @@ const {
   APP_HEADER,
   SERVER_PORT,
   SESSION_SECRET,
-  DATABASE_URL
 } = process.env;
 
 const isProduction = NODE_ENV === 'production';
@@ -48,7 +47,6 @@ const config = {
   apppwd: APP_PWD,
   appheader: APP_HEADER,
   sessionsecret: SESSION_SECRET,
-  databaseUrl: DATABASE_URL || `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
 };
 
 module.exports = config;
