@@ -6,6 +6,7 @@ const animalPostController = require("../controllers/animalcontroller/animal.cre
 const animalDeleteController = require("../controllers/animalcontroller/animal.remove.controller");
 const animalEditController = require("../controllers/animalcontroller/animal.edit.controller");
 const animalCreatemanyController = require("../controllers/animalcontroller/animal.createmany.controller");
+const animalRolerequestupdate = require("../controllers/animalcontroller/animal.rolerequestupdate");
 
 const router = express.Router();
 
@@ -596,5 +597,6 @@ router.get("/findanimal/:id", authentication, getAnimalController);
 
 
 router.put("/animaledit/:animalId", authentication, animalEditController);
+router.patch("/animalRequest/:animalId", authentication, animalRolerequestupdate);
 
 module.exports = router;

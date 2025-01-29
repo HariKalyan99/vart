@@ -53,7 +53,6 @@ module.exports = animalEditController = async (request, response) => {
       //     message: "You don't have permission to perform this action",
       //   });
       // }
-  
       if (
         !animalname &&
         !email &&
